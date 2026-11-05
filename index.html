@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1717">
-<title>FMS Escape Room · KSA</title>
+<title>FMS Escape Room · Mission Pausengong</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1717;--panel:#142424;--ink:#f4f6eb;--dim:#b7c9c1;--mint:#cffa86;--line:#344b44;--error:#ffc1b4;font-family:system-ui,sans-serif}
 *{box-sizing:border-box}
@@ -101,6 +101,26 @@ progress,progress::-webkit-progress-bar{background:#231722}
 @media(max-width:640px){.scenery::before{background:linear-gradient(0deg,#110d15 0%,#110d1560 65%,#110d15c0)}.mast .brand{font-size:.64rem;gap:7px}.mast>.label{display:none}.hero>div{padding:0}.game,.result{margin:auto}}
 @media(prefers-reduced-motion:reduce){.scenery::after{animation:none!important}}
 
+
+:root{--bg:#080e23;--ink:#f2fbff;--dim:#bfd2eb;--mint:#7cf8ee;--line:#365779;--error:#ffb0c8}
+body{background:#080e23}
+.scenery{background:#080e23;--light:59,233,224}
+body[data-zone="2"] .scenery{--light:144,111,255}
+body[data-zone="3"] .scenery{--light:80,192,255}
+.scenery::before{background:linear-gradient(90deg,#060d2440,#060d24b0 52%,#060d24ed),linear-gradient(0deg,#080e23,transparent 70%,#080e23a0)}
+.card{background:linear-gradient(140deg,#132744f5,#0d1531f5);border-color:#48709a;box-shadow:0 20px 64px #030818b0}
+.option{background:linear-gradient(110deg,#193655,#111d38);border-color:#47759685}.option:hover:not(:disabled){background:#23486a}
+.letter,.badge,.motion-control{background:#101e3c;border-color:#5585a9}
+.primary{color:#042333}.primary:hover{background:#b8fff7}
+.mast{border-color:#63bad76b}.hero>div{text-shadow:0 2px 24px #070e27}.media,.video-stage,.media video{background:#101c39}
+.route{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;list-style:none;margin:0 0 17px;padding:0}
+.route li{display:grid;gap:4px;padding:7px 4px;text-align:center;border:1px solid #477596;background:#101a33e8;color:var(--dim);border-radius:5px;font:.7rem ui-monospace,monospace}
+.route strong{font-size:1rem;color:var(--mint)}.route li[aria-current]{border-color:var(--mint);box-shadow:0 0 12px #7cf8ee38}
+.checkpoint{text-align:center}.checkpoint .final-score{margin:14px 0}.result a{color:var(--mint)}
+.exit-form{margin:20px auto;max-width:390px}.exit-form>div{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+#exitCode{width:8ch;min-height:48px;padding:8px;border:1px solid #65b9d1;background:#0a1330;color:var(--mint);font:700 1.4rem ui-monospace,monospace;text-align:center;letter-spacing:.08em;border-radius:5px}
+#codeRoute{font-family:ui-monospace,monospace;letter-spacing:.15em;margin:8px 0}#exitFeedback{margin:10px 0;color:var(--error)}
+@media(max-width:640px){.scenery::before{background:linear-gradient(0deg,#080e23,#080e2370 65%,#080e23bf)}.facts{gap:12px}}
 </style>
 <body data-zone="1">
 <div class="scenery" aria-hidden="true"><video id="sceneryVideo" muted playsinline loop preload="none" tabindex="-1"></video></div>
@@ -108,10 +128,10 @@ progress,progress::-webkit-progress-bar{background:#231722}
 <main class="shell">
   <section class="hero enter" id="start">
     <div>
-      <p class="label eyebrow">Mission · FMS entdecken</p>
-      <h1>FMS <span>Escape Room</span></h1>
-      <p class="lead">Wie gut kennst du die Fachmittelschule der KSA? Löse das Quiz und öffne den Ausgang.</p>
-      <div class="facts label"><div><strong>30</strong> Fragen</div><div><strong>21</strong> Richtige zum Entkommen</div></div>
+      <p class="label eyebrow">FMS PÄDAGOGIK · EINSATZ IN PFÄFFIKON</p>
+      <h1>Mission <span>Pausengong</span></h1>
+      <p class="lead">Der Pausengong ist verstummt und der Ausgang verriegelt. Erkunde die FMS Pädagogik, sammle an sechs Stationen die Ziffern und öffne die Schultür.</p>
+      <div class="facts label"><div><strong>6</strong> Stationen</div><div><strong>30</strong> Fragen</div><div><strong>21</strong> Richtige zum Entkommen</div></div>
       <button class="primary" id="startButton">Mission starten →</button>
     </div>
     <figure class="media">
@@ -120,13 +140,23 @@ progress,progress::-webkit-progress-bar{background:#231722}
     </figure>
   </section>
   <section class="game" id="game" hidden>
+    <ol class="route" id="route" aria-label="Schulhausroute und gesammelte Ziffern"></ol>
     <div class="stats"><span class="zone" id="position"></span><span id="score"></span></div>
     <progress id="progress" aria-label="Beantwortete Fragen"></progress>
     <div class="card" id="questionCard">
-      <h2 id="question" tabindex="-1"></h2>
+      <p id="missionNote" class="label eyebrow"></p><h2 id="question" tabindex="-1"></h2>
       <div class="options" id="options"></div>
       <p class="feedback" id="feedback" role="status" aria-atomic="true"></p>
       <div class="actions" id="actions" hidden><button class="primary" id="next">Weiter →</button></div>
+    </div>
+  </section>
+  <section class="game" id="checkpoint" hidden>
+    <div class="card checkpoint">
+      <p class="label eyebrow">FUNKMELDUNG · ZIFFER GESICHERT</p>
+      <h2 id="checkpointTitle" tabindex="-1"></h2>
+      <p class="final-score" id="checkpointDigit"></p>
+      <p id="checkpointMessage"></p>
+      <button class="primary" id="continueRoute">Weiter →</button>
     </div>
   </section>
   <section class="result" id="result" hidden>
@@ -135,195 +165,362 @@ progress,progress::-webkit-progress-bar{background:#231722}
       <h2 id="resultTitle" tabindex="-1"></h2>
       <div class="final-score" id="finalScore"></div>
       <p id="resultMessage"></p>
+      <form class="exit-form" id="exitForm" hidden>
+        <label for="exitCode">Sechsstelliger Ausgangscode</label>
+        <p id="codeRoute"></p>
+        <div><input id="exitCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required autocomplete="off"><button class="primary" type="submit">Ausgang öffnen</button></div>
+        <p id="exitFeedback" role="status"></p>
+      </form>
+      <p><a href="https://www.ksasz.ch/de/fachmittelschule/fachmittelschule/ausbildung/bildungsziel">FMS Pädagogik kennenlernen ↗</a> · <a href="./gymnasium/">Zum Gymnasium-Escape-Room ↗</a></p>
       <button class="primary" id="restart">Noch einmal spielen ↻</button>
     </div>
   </section>
 </main>
 <script>
 const questions = [
-            {
-                q: "Welches Berufsfeld bietet die FMS an der KSA an?",
-                opts: ["Gesundheit", "Pädagogik", "Soziale Arbeit", "Gestaltung"],
-                correct: 1,
-                explain: "Die FMS an der KSA führt das Berufsfeld Pädagogik mit der Fachmaturität Pädagogik."
-            },
-            {
-                q: "Wie lange dauert die FMS-Ausbildung bis zum Fachmittelschulausweis?",
-                opts: ["2 Jahre", "3 Jahre", "4 Jahre", "3,5 Jahre"],
-                correct: 1,
-                explain: "Die FMS führt in 3 Jahren zum Fachmittelschulausweis (6 Semester)."
-            },
-            {
-                q: "Wie viele Lernende besuchen im 1. Semester 2026/27 die FMS der KSA einschliesslich der Fachmaturitätsklassen?",
-                opts: ["65", "78", "93", "104"],
-                correct: 2,
-                explain: "In Pfäffikon besuchen 65 Lernende die Klassen FM1 bis FM3 und 28 die Fachmaturitätsklassen FM4a und FM4b. Zusammen sind es 93. In Nuolen gibt es keine FMS-Klasse."
-            },
-            {
-                q: "Wie hoch ist der Frauenanteil an der FMS der KSA inklusive Fachmaturität im 1. Semester 2026/27 (Stand 5. November 2026)?",
-                opts: ["Rund 72 %", "Rund 79 %", "Rund 85 %", "Rund 91 %"],
-                correct: 2,
-                explain: "Der Frauenanteil an der FMS inklusive Fachmaturität beträgt rund 85 %."
-            },
-            {
-                q: "Welche Standorte hat die FMS der KSA?",
-                opts: ["Nur Pfäffikon", "Pfäffikon und Nuolen", "Nur Nuolen", "Pfäffikon und Einsiedeln"],
-                correct: 0,
-                explain: "✓ Richtig! Die FMS der KSA hat ihren Standort aktuell nur in Pfäffikon (die KSA insgesamt hat zwei Standorte: Pfäffikon und Nuolen)."
-            },
-            {
-                q: "In welchem FMS-Jahr findet der Sprachaufenthalt statt?",
-                opts: ["1. Jahr", "2. Jahr", "3. Jahr", "Nach dem Abschluss"],
-                correct: 1,
-                explain: "Richtig! Der Sprachaufenthalt findet im 2. FMS-Jahr (3. Semester) statt."
-            },
-            {
-                q: "In welchen Ländern kann der FMS-Sprachaufenthalt absolviert werden?",
-                opts: ["England oder Frankreich", "Frankreich oder Spanien", "England oder USA", "Nur in England"],
-                correct: 0,
-                explain: "Die FMS-Schülerinnen und -Schüler können ihren Sprachaufenthalt in England oder Frankreich absolvieren."
-            },
-            {
-                q: "Was findet im 1. FMS-Jahr im 1. Semester statt?",
-                opts: ["Projektwoche", "Sprachaufenthalt", "Klassengebundene Studienwoche", "Bildungsreise"],
-                correct: 2,
-                explain: "Im 1. Semester des 1. FMS-Jahres findet eine klassengebundene Studienwoche statt."
-            },
-            {
-                q: "Wann findet die FMS-Bildungsreise statt?",
-                opts: ["1. Jahr", "2. Jahr", "3. Jahr", "7. Semester"],
-                correct: 2,
-                explain: "Die Bildungsreise findet im 3. FMS-Jahr (5. und 6. Semester) statt."
-            },
-            {
-                q: "Welche spezielle Woche findet zu Beginn des zweiten Semesters des ersten Jahres statt?",
-                opts: ["Projektwoche", "Schneesportwoche", "Medienwoche", "Kunst- und Kulturwoche"],
-                correct: 1,
-                explain: "Zu Beginn des zweiten Semesters (Frühling) des 1. FMS-Jahres findet die Schneesportwoche statt."
-            },
-            {
-                q: "Was absolvieren FMS-Schülerinnen und -Schüler im Mai des 2. Jahres?",
-                opts: ["Sozialpraktikum", "Orientierungspraktikum", "Lehrpraktikum", "Pflegepraktikum"],
-                correct: 1,
-                explain: "Im Sommer des 2. FMS-Jahres findet das Orientierungspraktikum statt."
-            },
-            {
-                q: "In welchen FMS-Jahren wird die Selbständige Arbeit erstellt?",
-                opts: ["Nur im 2. Jahr", "Nur im 3. Jahr", "Im 2. und 3. Jahr", "In allen Jahren"],
-                correct: 0,
-                explain: "Die Selbständige Arbeit wird nur im 2. FMS-Jahr erstellt."
-            },
-            {
-                q: "Welche Woche findet im März des 2. Jahres statt?",
-                opts: ["Projektwoche", "SOL-Woche zur Facharbeit", "Schnee-Sportwoche", "Medienwoche"],
-                correct: 1,
-                explain: "Im Frühling des 2. Jahres findet die SOL-Woche (Selbstorganisiertes Lernen) zur Erstellung der Facharbeit statt."
-            },
-            {
-                q: "Was findet im Mai des 1. FMS-Jahres statt?",
-                opts: ["Sprachaufenthalt", "Orientierungspraktikum", "Medienwoche", "Bildungsreise"],
-                correct: 2,
-                explain: "Im Sommer des 1. FMS-Jahres findet die Medienwoche statt."
-            },
-            {
-                q: "Welche sportliche Aktivität findet im Mai des 3. Jahres statt?",
-                opts: ["Schnee-Sportwoche", "Polysportive Sportwoche", "Wanderwoche", "Beachvolleyball-Turnier"],
-                correct: 1,
-                explain: "Im Sommer des 3. FMS-Jahres findet eine polysportive Sportwoche statt."
-            },
-            {
-                q: "Welches Fach wird an der FMS unterrichtet, das nicht Teil des gymnasialen Lehrplans ist?",
-                opts: ["Biologie", "Schwimmen", "Mathematik", "Englisch"],
-                correct: 1,
-                explain: "Schwimmen wird an der FMS unterrichtet und ist nicht Teil des gymnasialen Lehrplans."
-            },
-            {
-                q: "Wie viele Fremdsprachen werden an der FMS unterrichtet?",
-                opts: ["1", "2", "3", "4"],
-                correct: 1,
-                explain: "In der FMS werden zwei Fremdsprachen unterrichtet: Englisch und Französisch."
-            },
-            {
-                q: "Welches dieser Fächer ist ein Berufsfeldfach an der FMS der KSA?",
-                opts: ["Biologie", "Pädagogik/Psychologie", "Geschichte", "Chemie"],
-                correct: 1,
-                explain: "Pädagogik/Psychologie ist ein Berufsfeldfach an der FMS der KSA."
-            },
-            {
-                q: "Was ist ein wichtiges Aufnahmekriterium für die FMS?",
-                opts: ["Sportliche Leistung", "Gute Noten in der Sekundarschule", "Musikalische Begabung", "Technisches Verständnis"],
-                correct: 1,
-                explain: "Gute schulische Leistungen in der Sekundarschule sind ein wichtiges Aufnahmekriterium."
-            },
-            {
-                q: "Wann kann man sich für die FMS anmelden?",
-                opts: ["Jederzeit", "Nur im September", "Im Februar/März", "Im Dezember"],
-                correct: 2,
-                explain: "Die Anmeldefrist für die FMS ist üblicherweise im Februar/März."
-            },
-            {
-                q: "Welche Fremdsprachdiplome sind für das Bestehen der Fachmatura obligatorisch?",
-                opts: ["Nur DELF", "Nur First Certificate", "DELF oder First Certificate in English", "Beide Diplome zusammen"],
-                correct: 2,
-                explain: "Für das Bestehen der Fachmatura ist entweder das DELF (Französisch) oder das First Certificate in English (Englisch) obligatorisch."
-            },
-            {
-                q: "Was ist das Ziel der Fachmaturität Pädagogik?",
-                opts: ["Direkter Berufseinstieg", "Zugang zur PH", "Universitätszugang", "Lehrabschlussprüfung"],
-                correct: 1,
-                explain: "Die Fachmaturität Pädagogik ermöglicht den prüfungsfreien Zugang zu Pädagogischen Hochschulen."
-            },
-            {
-                q: "Wie viele Standorte hat die KSA insgesamt?",
-                opts: ["1 Standort", "2 Standorte", "3 Standorte", "4 Standorte"],
-                correct: 1,
-                explain: "Die KSA hat 2 Standorte: Pfäffikon und Nuolen. Die FMS befindet sich nur in Pfäffikon."
-            },
-            {
-                q: "Wie gross ist im 1. Semester 2026/27 das Verhältnis der FMS-Lernenden (inklusive Fachmaturität) zur gesamten Schülerschaft der KSA?",
-                opts: ["Ca. 1:4", "Ca. 1:5", "Ca. 1:6", "Ca. 1:7"],
-                correct: 3,
-                explain: "93 von insgesamt 639 Lernenden besuchen die FMS inklusive Fachmaturität. Das entspricht rund 1 von 7 Lernenden."
-            },
-            {
-                q: "Welcher Prozentsatz der KSA-Schülerschaft ist in der FMS?",
-                opts: ["Etwa 10%", "Etwa 14%", "Etwa 18%", "Etwa 22%"],
-                correct: 1,
-                explain: "✓ Richtig! 78 von 590 Schülern sind in der FMS, das sind etwa 14% der gesamten Schülerschaft."
-            },
-            {
-                q: "Wozu berechtigt die Fachmaturität Pädagogik?",
-                opts: ["Zugang zu allen Universitäten", "Prüfungsfreier Zugang zu Pädagogischen Hochschulen", "Nur zu bestimmten Fachhochschulen", "Direkter Berufseinstieg als Lehrer"],
-                correct: 1,
-                explain: "Die Fachmaturität Pädagogik ermöglicht den prüfungsfreien Zugang zu den Pädagogischen Hochschulen."
-            },
-            {
-                q: "Was erhält man nach 3 Jahren FMS?",
-                opts: ["Fachmaturität", "Fachmittelschulausweis", "Berufsmaturität", "Maturitätszeugnis"],
-                correct: 1,
-                explain: "Nach 3 Jahren erhält man den Fachmittelschulausweis, die Fachmaturität folgt nach einem weiteren Semester."
-            },
-            {
-                q: "Wie viele Jahre dauert die FMS-Ausbildung inklusive Fachmaturität insgesamt?",
-                opts: ["3 Jahre", "3,5 Jahre", "4 Jahre", "4,5 Jahre"],
-                correct: 1,
-                explain: "Die FMS-Ausbildung mit Fachmaturität dauert 3,5 Jahre: 3 Jahre für den Fachmittelschulausweis plus ein halbes Jahr (1 Semester) für die Fachmaturität."
-            },
-            {
-                q: "Was ist ein Vorteil der FMS gegenüber dem Gymnasium?",
-                opts: ["Kürzere Ausbildungsdauer", "Mehr Praxisbezug", "Höherer Abschluss", "Weniger Lektionen"],
-                correct: 1,
-                explain: "Die FMS bietet durch Praktika und berufsfeldbezogene Fächer mehr Praxisbezug als das Gymnasium."
-            },
-            {
-                q: "Welche Kompetenzen werden in der FMS besonders gefördert?",
-                opts: ["Nur fachliche Kompetenzen", "Selbst- und Sozialkompetenzen", "Nur Sprachkompetenzen", "Ausschließlich praktische Fertigkeiten"],
-                correct: 1,
-                explain: "In der FMS werden neben fachlichen Kompetenzen besonders auch Selbst- und Sozialkompetenzen gefördert."
-            }
-        ];
+  {
+    "q": "Welches Berufsfeld bietet die FMS an der KSA an?",
+    "opts": [
+      "Gesundheit",
+      "Pädagogik",
+      "Soziale Arbeit",
+      "Gestaltung"
+    ],
+    "correct": 1,
+    "explain": "Die FMS an der KSA führt das Berufsfeld Pädagogik mit der Fachmaturität Pädagogik."
+  },
+  {
+    "q": "Wie viele Lernende besuchen im 1. Semester 2026/27 die FMS der KSA einschliesslich der Fachmaturitätsklassen?",
+    "opts": [
+      "65",
+      "78",
+      "93",
+      "104"
+    ],
+    "correct": 2,
+    "explain": "In Pfäffikon besuchen 65 Lernende die Klassen FM1 bis FM3 und 28 die Fachmaturitätsklassen FM4a und FM4b. Zusammen sind es 93. In Nuolen gibt es keine FMS-Klasse."
+  },
+  {
+    "q": "Wie hoch ist der Frauenanteil an der FMS der KSA inklusive Fachmaturität im 1. Semester 2026/27 (Stand 5. November 2026)?",
+    "opts": [
+      "Rund 72 %",
+      "Rund 79 %",
+      "Rund 85 %",
+      "Rund 91 %"
+    ],
+    "correct": 2,
+    "explain": "Der Frauenanteil an der FMS inklusive Fachmaturität beträgt rund 85 %."
+  },
+  {
+    "q": "Welche Standorte hat die FMS der KSA?",
+    "opts": [
+      "Nur Pfäffikon",
+      "Pfäffikon und Nuolen",
+      "Nur Nuolen",
+      "Pfäffikon und Einsiedeln"
+    ],
+    "correct": 0,
+    "explain": "✓ Richtig! Die FMS der KSA hat ihren Standort aktuell nur in Pfäffikon (die KSA insgesamt hat zwei Standorte: Pfäffikon und Nuolen)."
+  },
+  {
+    "q": "Wie viele Standorte hat die KSA insgesamt?",
+    "opts": [
+      "1 Standort",
+      "2 Standorte",
+      "3 Standorte",
+      "4 Standorte"
+    ],
+    "correct": 1,
+    "explain": "Die KSA hat 2 Standorte: Pfäffikon und Nuolen. Die FMS befindet sich nur in Pfäffikon."
+  },
+  {
+    "q": "Wie lange dauert die FMS-Ausbildung bis zum Fachmittelschulausweis?",
+    "opts": [
+      "2 Jahre",
+      "3 Jahre",
+      "4 Jahre",
+      "3,5 Jahre"
+    ],
+    "correct": 1,
+    "explain": "Die FMS führt in 3 Jahren zum Fachmittelschulausweis (6 Semester)."
+  },
+  {
+    "q": "Welches Fach wird an der FMS unterrichtet, das nicht Teil des gymnasialen Lehrplans ist?",
+    "opts": [
+      "Biologie",
+      "Schwimmen",
+      "Mathematik",
+      "Englisch"
+    ],
+    "correct": 1,
+    "explain": "Schwimmen wird an der FMS unterrichtet und ist nicht Teil des gymnasialen Lehrplans."
+  },
+  {
+    "q": "Wie viele Fremdsprachen werden an der FMS unterrichtet?",
+    "opts": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correct": 1,
+    "explain": "In der FMS werden zwei Fremdsprachen unterrichtet: Englisch und Französisch."
+  },
+  {
+    "q": "Welches dieser Fächer ist ein Berufsfeldfach an der FMS der KSA?",
+    "opts": [
+      "Biologie",
+      "Pädagogik/Psychologie",
+      "Geschichte",
+      "Chemie"
+    ],
+    "correct": 1,
+    "explain": "Pädagogik/Psychologie ist ein Berufsfeldfach an der FMS der KSA."
+  },
+  {
+    "q": "Was erhält man nach 3 Jahren FMS?",
+    "opts": [
+      "Fachmaturität",
+      "Fachmittelschulausweis",
+      "Berufsmaturität",
+      "Maturitätszeugnis"
+    ],
+    "correct": 1,
+    "explain": "Nach 3 Jahren erhält man den Fachmittelschulausweis, die Fachmaturität folgt nach einem weiteren Semester."
+  },
+  {
+    "q": "Was findet im 1. FMS-Jahr im 1. Semester statt?",
+    "opts": [
+      "Projektwoche",
+      "Sprachaufenthalt",
+      "Klassengebundene Studienwoche",
+      "Bildungsreise"
+    ],
+    "correct": 2,
+    "explain": "Im 1. Semester des 1. FMS-Jahres findet eine klassengebundene Studienwoche statt."
+  },
+  {
+    "q": "Welche spezielle Woche findet zu Beginn des zweiten Semesters des ersten Jahres statt?",
+    "opts": [
+      "Projektwoche",
+      "Schneesportwoche",
+      "Medienwoche",
+      "Kunst- und Kulturwoche"
+    ],
+    "correct": 1,
+    "explain": "Zu Beginn des zweiten Semesters (Frühling) des 1. FMS-Jahres findet die Schneesportwoche statt."
+  },
+  {
+    "q": "Was findet im Mai des 1. FMS-Jahres statt?",
+    "opts": [
+      "Sprachaufenthalt",
+      "Orientierungspraktikum",
+      "Medienwoche",
+      "Bildungsreise"
+    ],
+    "correct": 2,
+    "explain": "Im Sommer des 1. FMS-Jahres findet die Medienwoche statt."
+  },
+  {
+    "q": "Welche sportliche Aktivität findet im Mai des 3. Jahres statt?",
+    "opts": [
+      "Schnee-Sportwoche",
+      "Polysportive Sportwoche",
+      "Wanderwoche",
+      "Beachvolleyball-Turnier"
+    ],
+    "correct": 1,
+    "explain": "Im Sommer des 3. FMS-Jahres findet eine polysportive Sportwoche statt."
+  },
+  {
+    "q": "Wann findet die FMS-Bildungsreise statt?",
+    "opts": [
+      "1. Jahr",
+      "2. Jahr",
+      "3. Jahr",
+      "7. Semester"
+    ],
+    "correct": 2,
+    "explain": "Die Bildungsreise findet im 3. FMS-Jahr (5. und 6. Semester) statt."
+  },
+  {
+    "q": "In welchem FMS-Jahr findet der Sprachaufenthalt statt?",
+    "opts": [
+      "1. Jahr",
+      "2. Jahr",
+      "3. Jahr",
+      "Nach dem Abschluss"
+    ],
+    "correct": 1,
+    "explain": "Richtig! Der Sprachaufenthalt findet im 2. FMS-Jahr (3. Semester) statt."
+  },
+  {
+    "q": "In welchen Ländern kann der FMS-Sprachaufenthalt absolviert werden?",
+    "opts": [
+      "England oder Frankreich",
+      "Frankreich oder Spanien",
+      "England oder USA",
+      "Nur in England"
+    ],
+    "correct": 0,
+    "explain": "Die FMS-Schülerinnen und -Schüler können ihren Sprachaufenthalt in England oder Frankreich absolvieren."
+  },
+  {
+    "q": "Was ist ein wichtiges Aufnahmekriterium für die FMS?",
+    "opts": [
+      "Sportliche Leistung",
+      "Gute Noten in der Sekundarschule",
+      "Musikalische Begabung",
+      "Technisches Verständnis"
+    ],
+    "correct": 1,
+    "explain": "Gute schulische Leistungen in der Sekundarschule sind ein wichtiges Aufnahmekriterium."
+  },
+  {
+    "q": "Wann kann man sich für die FMS anmelden?",
+    "opts": [
+      "Jederzeit",
+      "Nur im September",
+      "Im Februar/März",
+      "Im Dezember"
+    ],
+    "correct": 2,
+    "explain": "Die Anmeldefrist für die FMS ist üblicherweise im Februar/März."
+  },
+  {
+    "q": "Wie gross ist im 1. Semester 2026/27 das Verhältnis der FMS-Lernenden (inklusive Fachmaturität) zur gesamten Schülerschaft der KSA?",
+    "opts": [
+      "Ca. 1:4",
+      "Ca. 1:5",
+      "Ca. 1:6",
+      "Ca. 1:7"
+    ],
+    "correct": 3,
+    "explain": "93 von insgesamt 639 Lernenden besuchen die FMS inklusive Fachmaturität. Das entspricht rund 1 von 7 Lernenden."
+  },
+  {
+    "q": "Was absolvieren FMS-Schülerinnen und -Schüler im Mai des 2. Jahres?",
+    "opts": [
+      "Sozialpraktikum",
+      "Orientierungspraktikum",
+      "Lehrpraktikum",
+      "Pflegepraktikum"
+    ],
+    "correct": 1,
+    "explain": "Im Sommer des 2. FMS-Jahres findet das Orientierungspraktikum statt."
+  },
+  {
+    "q": "In welchen FMS-Jahren wird die Selbständige Arbeit erstellt?",
+    "opts": [
+      "Nur im 2. Jahr",
+      "Nur im 3. Jahr",
+      "Im 2. und 3. Jahr",
+      "In allen Jahren"
+    ],
+    "correct": 0,
+    "explain": "Die Selbständige Arbeit wird nur im 2. FMS-Jahr erstellt."
+  },
+  {
+    "q": "Welche Woche findet im März des 2. Jahres statt?",
+    "opts": [
+      "Projektwoche",
+      "SOL-Woche zur Facharbeit",
+      "Schnee-Sportwoche",
+      "Medienwoche"
+    ],
+    "correct": 1,
+    "explain": "Im Frühling des 2. Jahres findet die SOL-Woche (Selbstorganisiertes Lernen) zur Erstellung der Facharbeit statt."
+  },
+  {
+    "q": "Was ist ein Vorteil der FMS gegenüber dem Gymnasium?",
+    "opts": [
+      "Kürzere Ausbildungsdauer",
+      "Mehr Praxisbezug",
+      "Höherer Abschluss",
+      "Weniger Lektionen"
+    ],
+    "correct": 1,
+    "explain": "Die FMS bietet durch Praktika und berufsfeldbezogene Fächer mehr Praxisbezug als das Gymnasium."
+  },
+  {
+    "q": "Welche Kompetenzen werden in der FMS besonders gefördert?",
+    "opts": [
+      "Nur fachliche Kompetenzen",
+      "Selbst- und Sozialkompetenzen",
+      "Nur Sprachkompetenzen",
+      "Ausschließlich praktische Fertigkeiten"
+    ],
+    "correct": 1,
+    "explain": "In der FMS werden neben fachlichen Kompetenzen besonders auch Selbst- und Sozialkompetenzen gefördert."
+  },
+  {
+    "q": "Welche Fremdsprachdiplome sind für das Bestehen der Fachmatura obligatorisch?",
+    "opts": [
+      "Nur DELF",
+      "Nur First Certificate",
+      "DELF oder First Certificate in English",
+      "Beide Diplome zusammen"
+    ],
+    "correct": 2,
+    "explain": "Für das Bestehen der Fachmatura ist entweder das DELF (Französisch) oder das First Certificate in English (Englisch) obligatorisch."
+  },
+  {
+    "q": "Was ist das Ziel der Fachmaturität Pädagogik?",
+    "opts": [
+      "Direkter Berufseinstieg",
+      "Zugang zur PH",
+      "Universitätszugang",
+      "Lehrabschlussprüfung"
+    ],
+    "correct": 1,
+    "explain": "Die Fachmaturität Pädagogik ermöglicht den prüfungsfreien Zugang zu Pädagogischen Hochschulen."
+  },
+  {
+    "q": "Wie gross ist im 1. Semester 2026/27 der Anteil der FMS inklusive Fachmaturität an der gesamten KSA?",
+    "opts": [
+      "Rund 10 %",
+      "Rund 15 %",
+      "Rund 18 %",
+      "Rund 22 %"
+    ],
+    "correct": 1,
+    "explain": "93 von 639 Lernenden besuchen die FMS inklusive Fachmaturität. Das sind rund 15 %."
+  },
+  {
+    "q": "Wozu berechtigt die Fachmaturität Pädagogik?",
+    "opts": [
+      "Zugang zu allen Universitäten",
+      "Prüfungsfreier Zugang zu Pädagogischen Hochschulen",
+      "Nur zu bestimmten Fachhochschulen",
+      "Direkter Berufseinstieg als Lehrer"
+    ],
+    "correct": 1,
+    "explain": "Die Fachmaturität Pädagogik ermöglicht den prüfungsfreien Zugang zu den Pädagogischen Hochschulen."
+  },
+  {
+    "q": "Wie viele Jahre dauert die FMS-Ausbildung inklusive Fachmaturität insgesamt?",
+    "opts": [
+      "3 Jahre",
+      "3,5 Jahre",
+      "4 Jahre",
+      "4,5 Jahre"
+    ],
+    "correct": 1,
+    "explain": "Die FMS-Ausbildung mit Fachmaturität dauert 3,5 Jahre: 3 Jahre für den Fachmittelschulausweis plus ein halbes Jahr (1 Semester) für die Fachmaturität."
+  }
+];
 const get = id => document.getElementById(id);
 const target = 21;
+const stops = [
+  {name:'Eingang', clue:'Der Pausengong ist ausgefallen. Finde heraus, wo du gelandet bist.', scene:2, digit:'7'},
+  {name:'Unterricht', clue:'Auf dem Stundenplan findest du die nächste Spur.', scene:1, digit:'3'},
+  {name:'Projektwochen', clue:'Im Kalender sind besondere Schulwochen markiert.', scene:0, digit:'9'},
+  {name:'Unterwegs', clue:'Reisehinweise und Angaben zum Einstieg führen dich weiter.', scene:1, digit:'2'},
+  {name:'Praxis', clue:'Im Praxisdossier geht es ums Beobachten, Planen und selbständige Arbeiten.', scene:0, digit:'6'},
+  {name:'Fachmaturität', clue:'Prüfe die Hinweise zu Abschluss und Anschluss. Der Ausgang ist in Sicht.', scene:2, digit:'4'}
+];
+const questionsPerStop = questions.length / stops.length;
+let collected = 0;
 let current = 0;
 let score = 0;
 let answered = false;
@@ -381,6 +578,11 @@ function startGame() {
   get('tour').pause();
   current = 0;
   score = 0;
+  collected = 0;
+  get('checkpoint').hidden = true;
+  get('exitForm').reset();
+  get('exitForm').hidden = true;
+  get('exitFeedback').textContent = '';
   get('start').hidden = true;
   get('result').hidden = true;
   get('game').hidden = false;
@@ -389,10 +591,22 @@ function startGame() {
 }
 
 function updateStats() {
-  const zone = Math.min(3, Math.floor(current / 10) + 1);
-  document.body.dataset.zone = zone;
-  setScene(zone - 1);
-  get('position').textContent = scenes[zone - 1].label + ' · Frage ' + (current + 1) + ' / ' + questions.length;
+  const stopIndex = Math.floor(current / questionsPerStop);
+  const stop = stops[stopIndex];
+  document.body.dataset.zone = stop.scene + 1;
+  setScene(stop.scene);
+  get('missionNote').textContent = stop.clue;
+  get('position').textContent = stop.name + ' · Frage ' + (current + 1) + ' / ' + questions.length;
+  get('route').replaceChildren(...stops.map((step, index) => {
+    const item = document.createElement('li');
+    const digit = document.createElement('strong');
+    item.title = step.name;
+    if (index === stopIndex) item.setAttribute('aria-current', 'step');
+    digit.textContent = index < collected ? step.digit : '·';
+    digit.setAttribute('aria-label', index < collected ? 'Ziffer ' + step.digit : 'Ziffer noch nicht gesammelt');
+    item.append('0' + (index + 1), digit);
+    return item;
+  }));
   get('score').textContent = 'Richtig: ' + score + ' / ' + target;
   get('progress').value = current + Number(answered);
 }
@@ -438,26 +652,61 @@ function answerQuestion(index) {
   const explanation = entry.explain.replace(/^(?:✓\s*)?Richtig!\s*/, '');
   get('feedback').replaceChildren(verdict, document.createTextNode(explanation));
   updateStats();
-  get('next').textContent = current + 1 === questions.length ? 'Ergebnis anzeigen →' : 'Weiter →';
+  get('next').textContent = (current + 1) % questionsPerStop === 0 ? 'Ziffer sichern →' : 'Weiter →';
   get('actions').hidden = false;
   get('next').focus();
 }
 
 function nextQuestion() {
-  if (!answered) return;
-  current++;
-  if (current < questions.length) {
+  if (!answered || get('game').hidden) return;
+  if ((current + 1) % questionsPerStop !== 0) {
+    current++;
     showQuestion();
     return;
   }
-  const escaped = score >= target;
+  const stop = stops[collected++];
   get('game').hidden = true;
+  get('checkpoint').hidden = false;
+  get('checkpointTitle').textContent = stop.name + ' abgeschlossen';
+  get('checkpointDigit').textContent = stop.digit;
+  get('checkpointMessage').textContent = 'Ziffer ' + collected + ' von ' + stops.length + ' steht auf deiner Route.';
+  get('continueRoute').textContent = collected === stops.length ? 'Zum Ausgang →' : 'Weiter: ' + stops[collected].name + ' →';
+  get('checkpointTitle').focus();
+}
+
+function continueRoute() {
+  if (get('checkpoint').hidden) return;
+  get('checkpoint').hidden = true;
+  current++;
+  if (current < questions.length) {
+    get('game').hidden = false;
+    showQuestion();
+    return;
+  }
   get('result').hidden = false;
-  get('resultTitle').textContent = escaped ? 'Der Ausgang ist offen!' : 'Der Ausgang bleibt verschlossen';
   get('finalScore').textContent = score + ' / ' + questions.length;
-  get('resultMessage').textContent = escaped ? 'Du hast die Mission geschafft.' : 'Mit 21 richtigen Antworten öffnest du den Ausgang.';
+  get('codeRoute').textContent = stops.map(stop => stop.digit).join(' · ');
+  get('exitForm').hidden = score < target;
+  get('resultTitle').textContent = score >= target ? 'Du bist am Ausgang' : 'Der Ausgang bleibt verschlossen';
+  get('resultMessage').textContent = score >= target
+    ? 'Die Freigabe ist da. Gib die Ziffern in der Reihenfolge deiner Route ein.'
+    : 'Für die Freigabe brauchst du mindestens 21 richtige Antworten.';
   get('resultTitle').focus();
 }
+
+get('continueRoute').addEventListener('click', continueRoute);
+get('exitForm').addEventListener('submit', event => {
+  event.preventDefault();
+  if (score < target || collected !== stops.length) return;
+  if (get('exitCode').value !== stops.map(stop => stop.digit).join('')) {
+    get('exitFeedback').textContent = 'Der Code stimmt noch nicht. Lies die Ziffern von links nach rechts.';
+    return;
+  }
+  get('exitForm').hidden = true;
+  get('resultTitle').textContent = 'Der Ausgang ist offen!';
+  get('resultMessage').textContent = 'Der Pausengong ist wieder bereit. Du hast die Mission geschafft.';
+  get('resultTitle').focus();
+});
 
 get('startButton').addEventListener('click', startGame);
 get('next').addEventListener('click', nextQuestion);
