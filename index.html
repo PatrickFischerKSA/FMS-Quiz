@@ -59,9 +59,52 @@ h2{font-size:clamp(1.45rem,4vw,2.45rem);line-height:1.17;letter-spacing:-.035em;
 @keyframes enter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:640px){.shell{width:calc(100% - 32px)}.mast{padding:16px 0}.hero{grid-template-columns:1fr}.hero h1{font-size:clamp(3.55rem,13vw,5.25rem)}.facts{margin:19px 0}.hero .primary{width:100%}video{height:300px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* The stairwell remains visible beside the access panel. */
+:root{--ink:#fff3db;--dim:#c9baaa;--mint:#ffcc80;--line:#725540;--error:#ffada5}
+body{isolation:isolate;background:#121013}
+.scenery{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;--light:255,147,63;background:#151018}
+body[data-zone="2"] .scenery{--light:97,182,255}
+body[data-zone="3"] .scenery{--light:255,80,114}
+.scenery video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 46%;opacity:.69;filter:saturate(.7) contrast(1.12)}
+.scenery::before,.scenery::after{content:"";position:absolute;inset:0}
+.scenery::before{z-index:1;background:linear-gradient(90deg,rgba(14,9,16,.2),rgba(14,9,16,.52) 49%,rgba(14,9,16,.94) 100%),linear-gradient(0deg,#110d15 1%,transparent 55%,#110d15b0)}
+.scenery::after{z-index:2;inset:-20%;background:radial-gradient(ellipse at 24% 46%,rgba(var(--light),.40),transparent 36%),repeating-linear-gradient(0deg,#1710191c 0 1px,transparent 1px 5px);animation:sweep 10s ease-in-out infinite alternate;transition:background .55s}
+@keyframes sweep{from{transform:translateX(-5%);opacity:.62}to{transform:translateX(8%);opacity:1}}
+body.motion-off .scenery::after{animation:none}
+.mast{border-color:#edc59a56}
+.badge{background:#221518}
+.mast .label{text-shadow:0 1px 8px #000}
+.hero>div{padding:20px 0;text-shadow:0 2px 24px #140d13}
+.media,.video-stage,.media video{background:#1b1419}
+.media{box-shadow:0 18px 50px #080509a6;border-color:#d49a655c}
+.primary{background:var(--mint);color:#291809}
+.primary:hover{background:#ffe1af}
+.motion-control{background:#181118dd;color:var(--ink);border:1px solid #cd9d6a80;border-radius:5px;padding:7px 10px;font-size:.75rem;white-space:nowrap}
+.motion-control:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.game,.result{max-width:690px;margin-left:auto;margin-right:0}
+.card{position:relative;background:linear-gradient(145deg,#261b20f7,#18141bef);border:1px solid #9f775c;border-radius:5px;box-shadow:0 24px 70px #100810c0,inset 0 0 34px #08070d7a}
+.card::before,.card::after{content:"";position:absolute;width:14px;height:14px;pointer-events:none}
+.card::before{top:-1px;left:-1px;border-top:2px solid var(--mint);border-left:2px solid var(--mint)}
+.card::after{bottom:-1px;right:-1px;border-bottom:2px solid var(--mint);border-right:2px solid var(--mint)}
+h2:focus{outline:none}
+.stats{color:var(--ink);text-shadow:0 1px 7px #000}
+progress,progress::-webkit-progress-bar{background:#231722}
+.option{background:linear-gradient(105deg,#39282b,#221d25);border-color:#9c78546e;border-radius:4px}
+.option:hover:not(:disabled){background:#513631;border-color:var(--mint)}
+.letter{border-color:#a27950;background:#21151a;border-radius:2px;color:var(--mint)}
+.option.correct{background:#293923;border-color:#d0ed9a}
+.option.correct .letter{color:#d0ed9a}
+.option.wrong{background:#49242b}
+.zone{display:flex;align-items:center;gap:9px}
+.zone::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint)}
+@media(max-width:640px){.scenery::before{background:linear-gradient(0deg,#110d15 0%,#110d1560 65%,#110d15c0)}.mast .brand{font-size:.64rem;gap:7px}.mast>.label{display:none}.hero>div{padding:0}.game,.result{margin:auto}}
+@media(prefers-reduced-motion:reduce){.scenery::after{animation:none!important}}
+
 </style>
-<body>
-<header class="mast shell"><div class="brand"><span class="badge">KSA</span> Fachmittelschule</div><span class="label">Escape Room</span></header>
+<body data-zone="1">
+<div class="scenery" aria-hidden="true"><video id="sceneryVideo" muted playsinline loop preload="none" tabindex="-1"></video></div>
+<header class="mast shell"><div class="brand"><span class="badge">KSA</span> Fachmittelschule</div><span class="label">Escape Room</span><button class="motion-control" id="motionControl" aria-pressed="false">Hintergrund pausieren</button></header>
 <main class="shell">
   <section class="hero enter" id="start">
     <div>
@@ -77,7 +120,7 @@ h2{font-size:clamp(1.45rem,4vw,2.45rem);line-height:1.17;letter-spacing:-.035em;
     </figure>
   </section>
   <section class="game" id="game" hidden>
-    <div class="stats"><span id="position"></span><span id="score"></span></div>
+    <div class="stats"><span class="zone" id="position"></span><span id="score"></span></div>
     <progress id="progress" aria-label="Beantwortete Fragen"></progress>
     <div class="card" id="questionCard">
       <h2 id="question" tabindex="-1"></h2>
@@ -284,6 +327,38 @@ const target = 21;
 let current = 0;
 let score = 0;
 let answered = false;
+const sceneryVideo = get('sceneryVideo');
+const motionControl = get('motionControl');
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+let motionPaused = motionPreference.matches;
+sceneryVideo.poster = get('tour').poster;
+
+function updateMotion() {
+  document.body.classList.toggle('motion-off', motionPaused);
+  motionControl.setAttribute('aria-pressed', String(motionPaused));
+  motionControl.textContent = motionPaused ? 'Hintergrund bewegen' : 'Hintergrund pausieren';
+  if (motionPaused) {
+    sceneryVideo.pause();
+    return;
+  }
+  if (!sceneryVideo.getAttribute('src')) {
+    sceneryVideo.src = get('tour').querySelector('source').src;
+  }
+  sceneryVideo.play().catch(() => {});
+}
+
+motionControl.addEventListener('click', () => {
+  motionPaused = !motionPaused;
+  updateMotion();
+});
+motionPreference.addEventListener('change', event => {
+  motionPaused = event.matches;
+  updateMotion();
+});
+get('tour').addEventListener('play', () => sceneryVideo.pause());
+get('tour').addEventListener('pause', updateMotion);
+get('tour').addEventListener('ended', updateMotion);
+updateMotion();
 
 function startGame() {
   get('tour').pause();
@@ -297,7 +372,9 @@ function startGame() {
 }
 
 function updateStats() {
-  get('position').textContent = 'Frage ' + (current + 1) + ' / ' + questions.length;
+  const zone = Math.min(3, Math.floor(current / 10) + 1);
+  document.body.dataset.zone = zone;
+  get('position').textContent = 'Sektor ' + zone + ' · Frage ' + (current + 1) + ' / ' + questions.length;
   get('score').textContent = 'Richtig: ' + score + ' / ' + target;
   get('progress').value = current + Number(answered);
 }
