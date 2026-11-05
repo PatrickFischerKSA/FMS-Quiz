@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#161916">
-<meta name="description" content="Vier Dossiers, acht Fragen und ein Tresorcode. Ein Escape Room über das Gymnasium der Kantonsschule Ausserschwyz.">
+<meta name="description" content="Sechs Dossiers, 30 Fragen und ein Tresorcode. Ein Escape Room über das Gymnasium der Kantonsschule Ausserschwyz.">
 <title>Akte KSA · Der verschwundene Maturaschlüssel</title>
 <style>:root{color-scheme:dark;--bg:#161916;--gold:#f3be75;--light:#fcf0d8;--soft:#c8ba9f;--paper:#f5e6c7;--dark:#281f18;--line:#584a38;--mono:ui-monospace,monospace;font-family:system-ui,sans-serif}
 *{box-sizing:border-box}
@@ -80,6 +80,7 @@ footer{border-top:1px solid var(--line)}footer ul{padding-left:18px}
 .dossier-photo{height:clamp(125px,20vw,215px);margin-bottom:20px}
 .exit-photo{display:block;width:100%;height:175px;object-fit:cover;object-position:center 28%;margin:16px 0;border-radius:4px}
 @media(max-width:740px){.vault{max-width:none;aspect-ratio:16/10}.vault-ring{width:27%}.photo-strip{gap:5px}.photo-strip figure{aspect-ratio:1.05}.photo-strip figcaption{font-size:.55rem;padding:5px}}
+#code{width:9ch}.case-link{margin:14px 0 0}.offers{margin-top:48px}.offer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}.offer-grid article{background:#2b221b;border:1px solid var(--line);padding:18px}.offer-grid h3{font-size:1.5rem}.offer-grid a{color:var(--gold)}.offers>p:last-child{margin-top:16px}
 </style>
 
 </head>
@@ -90,9 +91,9 @@ footer{border-top:1px solid var(--line)}footer ul{padding-left:18px}
   <div>
     <p class="eyebrow"><span class="lamp"></span> AKTE 04 · TRESOR VERRIEGELT</p>
     <h1>Der verschwundene <em>Maturaschlüssel</em></h1>
-    <p class="lead">Kurz vor der Übergabe verriegelt sich der Tresor im Schularchiv. Entschlüssle vier Dossiers über das Gymnasium der KSA und finde den Code.</p>
+    <p class="lead">Kurz vor der Übergabe verriegelt sich der Tresor im Schularchiv. Entschlüssle sechs Dossiers über das Gymnasium der KSA und finde den Code.</p>
     <button class="action" id="start">Archiv betreten <span aria-hidden="true">↗</span></button>
-    <p class="meta">4 Dossiers / 8 Fragen / 1 Tresor</p>
+    <p class="meta">6 Dossiers / 30 Fragen / 1 Tresor</p>
   </div>
   <div class="vault" aria-hidden="true">
     <img class="hero-photo" data-photo="aussenansicht" alt="">
@@ -108,7 +109,7 @@ footer{border-top:1px solid var(--line)}footer ul{padding-left:18px}
 
 <section id="game" hidden aria-label="Schularchiv">
   <div class="game-head">
-    <div><p class="eyebrow">SCHULARCHIV</p><h2 id="game-title" tabindex="-1">Die vier Dossiers</h2></div>
+    <div><p class="eyebrow">SCHULARCHIV</p><h2 id="game-title" tabindex="-1">Die sechs Dossiers</h2></div>
     <p class="meta" id="progress" role="status"></p>
   </div>
   <div class="game-grid">
@@ -118,8 +119,8 @@ footer{border-top:1px solid var(--line)}footer ul{padding-left:18px}
   <section class="lock" aria-labelledby="lock-title">
     <div><p class="eyebrow"><span class="lamp"></span> TRESOR</p><h2 id="lock-title">Zugangscode</h2><p>Trage die Ziffern in der Reihenfolge der Dossiers ein.</p></div>
     <form id="lock-form">
-      <label for="code">Vierstelliger Code</label>
-      <div class="lock-row"><input id="code" name="code" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required autocomplete="off" placeholder="····"><button class="action" type="submit">Öffnen</button></div>
+      <label for="code">Sechsstelliger Code</label>
+      <div class="lock-row"><input id="code" name="code" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required autocomplete="off" placeholder="······"><button class="action" type="submit">Öffnen</button></div>
       <p id="code-feedback" role="status"></p>
     </form>
   </section>
@@ -129,9 +130,10 @@ footer{border-top:1px solid var(--line)}footer ul{padding-left:18px}
   <p class="eyebrow"><span class="lamp"></span> ZUGANG FREIGEGEBEN</p>
   <img class="exit-photo" data-photo="ausgang" alt="Blick auf den Ausgang des Schulhauses"><div class="key" aria-hidden="true">✦</div>
   <h2 id="final-title" tabindex="-1">Archiv geöffnet.</h2>
-  <p>Du hast den Maturaschlüssel gefunden und alle vier Dossiers entschlüsselt.</p>
+  <p>Du hast den Maturaschlüssel gefunden und alle sechs Dossiers entschlüsselt.</p>
   <button class="action" id="restart">Neue Runde ↻</button>
 </section>
+<aside class="offers" aria-labelledby="offers-title"><p class="eyebrow">DEIN WEG AN DER KSA</p><h2 id="offers-title">Drei Angebote entdecken</h2><div class="offer-grid"><article><h3>Kunst & Sport</h3><p>Dein Talent braucht Zeit. Die K+S-Klasse schafft Freiraum für Training, Proben und Auftritte.</p><a href="https://www.ksasz.ch/de/gymnasium-ksa/gymnasium/ausbildung/sport-und-musikbegabte">Angebot entdecken ↗</a></article><article><h3>Bilinguale Matura</h3><p>Erlebe Englisch als Unterrichtssprache, etwa in Geschichte oder Mathematik.</p><a href="https://www.ksasz.ch/de/gymnasium-ksa/gymnasium/ausbildung/bilinguale-maturitaet">Angebot entdecken ↗</a></article><article><h3>FMS Pädagogik</h3><p>Verbinde Allgemeinbildung mit Praxiseinblicken und entdecke den Weg zur Pädagogischen Hochschule.</p><a href="https://www.ksasz.ch/de/fachmittelschule/fachmittelschule/ausbildung/bildungsziel">Angebot entdecken ↗</a></article></div><p><a href="../">Zum FMS Escape Room ↗</a></p></aside>
 </main>
 <footer><details><summary>Offizielle KSA-Quellen</summary><ul>
 <li><a href="https://www.ksasz.ch/de/ksa/portraet/schule">Standorte und Schulporträt</a></li>
@@ -146,40 +148,592 @@ const images = {"korridor":"data:image/webp;base64,UklGRvAMAABXRUJQVlA4IOQMAACwb
 
 const cases = [
   {
-    name: 'Standortakte', title: 'Die Standortakte',
-    clue: 'Zur Kantonsschule Ausserschwyz gehören Pfäffikon SZ und Nuolen. Das reguläre Kurzzeitgymnasium dauert vier Jahre und endet mit der gymnasialen Matura.',
-    questions: [
-      ['Welche beiden Orte gehören zur KSA?', [['Pfäffikon SZ und Nuolen', 4], ['Nuolen und Einsiedeln', 7], ['Pfäffikon SZ und Lachen', 8]], 0],
-      ['Wie lange dauert das reguläre Kurzzeitgymnasium?', [['Drei Jahre', -2], ['Vier Jahre', 0], ['Fünf Jahre', 1]], 1]
-    ],
-    hint: 'Unterscheide die beiden Schulstandorte von ähnlich klingenden Orten. Die Dauer steht im Archivvermerk.'
+    "name": "Standortakte",
+    "title": "Die Standortakte",
+    "clue": "Die KSA hat Schulhäuser in Pfäffikon SZ und Nuolen. Das reguläre Kurzzeitgymnasium führt in vier Jahren zur anerkannten gymnasialen Matura. Die Ausbildung zielt auf die Hochschulreife, die den Zugang etwa zur Universität oder ETH eröffnet.",
+    "link": "https://www.ksasz.ch/de/ksa/portraet/schule",
+    "questions": [
+      [
+        "Welche beiden Schulstandorte gehören zur KSA?",
+        [
+          [
+            "Pfäffikon SZ und Nuolen",
+            1
+          ],
+          [
+            "Nuolen und Einsiedeln",
+            0
+          ],
+          [
+            "Pfäffikon SZ und Lachen",
+            -1
+          ]
+        ],
+        0
+      ],
+      [
+        "Wie lange dauert das reguläre Kurzzeitgymnasium?",
+        [
+          [
+            "Drei Jahre",
+            0
+          ],
+          [
+            "Fünf Jahre",
+            -1
+          ],
+          [
+            "Vier Jahre",
+            1
+          ]
+        ],
+        2
+      ],
+      [
+        "Wie heisst der Abschluss des Gymnasiums?",
+        [
+          [
+            "Fachmittelschulausweis",
+            0
+          ],
+          [
+            "Gymnasiale Matura",
+            1
+          ],
+          [
+            "Berufsmaturität",
+            -1
+          ]
+        ],
+        1
+      ],
+      [
+        "Welches Bildungsziel verfolgt das Gymnasium?",
+        [
+          [
+            "Hochschulreife",
+            1
+          ],
+          [
+            "Berufsausbildung in einem Lehrbetrieb",
+            0
+          ],
+          [
+            "Ein einzelnes Sprachdiplom",
+            -1
+          ]
+        ],
+        0
+      ],
+      [
+        "Welche Einrichtung ist ein Beispiel für einen Studienweg nach der Matura?",
+        [
+          [
+            "Lehrbetrieb für eine berufliche Grundbildung",
+            -1
+          ],
+          [
+            "Sekundarschule",
+            -2
+          ],
+          [
+            "ETH",
+            0
+          ]
+        ],
+        2
+      ]
+    ]
   },
   {
-    name: 'Profilwahl', title: 'Zwei Spuren',
-    clue: 'Das sprachliche Profil gibt Deutsch, Französisch und Englisch mehr Unterrichtszeit. Im mathematisch-naturwissenschaftlichen Profil erhalten Biologie, Chemie und Physik mehr Lektionen. Die Profilwahl findet vor dem Eintritt statt.',
-    questions: [
-      ['Welches Profil passt zu mehr Französisch und Englisch?', [['Mathematisch-naturwissenschaftliches Profil', 4], ['Sprachliches Profil', 1]], 1],
-      ['Wann wird das Profil gewählt?', [['Vor dem Eintritt', 1], ['Im dritten Jahr', 3], ['Nach der Matura', 5]], 0]
-    ],
-    hint: 'Gesucht sind das Profil mit mehr Sprachlektionen und der Zeitpunkt der Profilwahl.'
+    "name": "Profilwahl",
+    "title": "Zwei Spuren",
+    "clue": "Die Profilwahl erfolgt vor dem Eintritt. Im sprachlichen Profil haben Deutsch, Französisch und Englisch mehr Lektionen. Das mathematisch-naturwissenschaftliche Profil vertieft Biologie, Chemie und Physik mit zusätzlicher Unterrichtszeit.",
+    "link": "https://www.ksasz.ch/de/gymnasium-ksa/gymnasium/ausbildung/bildungsprofile",
+    "questions": [
+      [
+        "Welches Profil bietet mehr Französisch und Englisch?",
+        [
+          [
+            "Mathematisch-naturwissenschaftliches Profil",
+            0
+          ],
+          [
+            "Sprachliches Profil",
+            1
+          ],
+          [
+            "Kunst- und Sportklasse",
+            -1
+          ]
+        ],
+        1
+      ],
+      [
+        "Wann wird das Profil gewählt?",
+        [
+          [
+            "Vor dem Eintritt",
+            1
+          ],
+          [
+            "Im dritten Gymnasialjahr",
+            0
+          ],
+          [
+            "Nach der Matura",
+            -1
+          ]
+        ],
+        0
+      ],
+      [
+        "Welches Profil passt zu besonderem Interesse an Biologie, Chemie und Physik?",
+        [
+          [
+            "Sprachliches Profil",
+            -1
+          ],
+          [
+            "Fachmittelschule",
+            -2
+          ],
+          [
+            "Mathematisch-naturwissenschaftliches Profil",
+            0
+          ]
+        ],
+        2
+      ],
+      [
+        "Welche drei Sprachen werden im sprachlichen Profil besonders vertieft?",
+        [
+          [
+            "Deutsch, Spanisch und Latein",
+            -1
+          ],
+          [
+            "Deutsch, Französisch und Englisch",
+            0
+          ],
+          [
+            "Französisch, Italienisch und Spanisch",
+            -2
+          ]
+        ],
+        1
+      ],
+      [
+        "Was bedeutet die Vertiefung in diesen Profilen konkret?",
+        [
+          [
+            "Mehr Lektionen in bestimmten Grundlagenfächern",
+            0
+          ],
+          [
+            "Alle Grundlagenfächer entfallen",
+            -1
+          ],
+          [
+            "Das Profil gilt erst nach dem Abschluss",
+            -2
+          ]
+        ],
+        0
+      ]
+    ]
   },
   {
-    name: 'Stundenplan', title: 'Das vertauschte Etikett',
-    clue: 'Der Unterricht im Schwerpunktfach beginnt im zweiten Gymnasialjahr. Das Ergänzungsfach kommt im dritten Jahr dazu. Spanisch und Latein gehören zum Angebot der Schwerpunktfächer. Informatik ist ein obligatorisches Fach.',
-    questions: [
-      ['Welches Fach kommt im zweiten Jahr dazu?', [['Ergänzungsfach', 4], ['Schwerpunktfach', 5], ['Matura', 2]], 1],
-      ['Welches Paar besteht aus zwei Schwerpunktfächern?', [['Informatik und Latein', 1], ['Spanisch und Latein', 3], ['Informatik und Spanisch', 2]], 1]
-    ],
-    hint: 'Ein obligatorisches Fach gehört hier nicht zum gesuchten Paar.'
+    "name": "Fächerwahl",
+    "title": "Das vertauschte Etikett",
+    "clue": "Das Schwerpunktfach beginnt im zweiten Gymnasialjahr, das Ergänzungsfach im dritten. Spanisch, Latein und Musik gehören zum Schwerpunktangebot. Informatik ist ein obligatorisches Fach. Freifächer erweitern das Angebot.",
+    "link": "https://www.ksasz.ch/de/gymnasium-ksa/gymnasium/ausbildung/faecher",
+    "questions": [
+      [
+        "Welches Wahlpflichtfach beginnt im zweiten Jahr?",
+        [
+          [
+            "Ergänzungsfach",
+            1
+          ],
+          [
+            "Freifach",
+            0
+          ],
+          [
+            "Schwerpunktfach",
+            2
+          ]
+        ],
+        2
+      ],
+      [
+        "Welche beiden Fächer gehören zum Schwerpunktangebot?",
+        [
+          [
+            "Informatik und Latein",
+            1
+          ],
+          [
+            "Spanisch und Latein",
+            2
+          ],
+          [
+            "Informatik und Spanisch",
+            0
+          ]
+        ],
+        1
+      ],
+      [
+        "Wann beginnt das Ergänzungsfach?",
+        [
+          [
+            "Im dritten Jahr",
+            2
+          ],
+          [
+            "Im ersten Jahr",
+            1
+          ],
+          [
+            "Erst nach der Matura",
+            0
+          ]
+        ],
+        0
+      ],
+      [
+        "Welches dieser Fächer ist obligatorisch?",
+        [
+          [
+            "Latein",
+            0
+          ],
+          [
+            "Spanisch",
+            -1
+          ],
+          [
+            "Informatik",
+            1
+          ]
+        ],
+        2
+      ],
+      [
+        "Welches weitere Fach bietet die KSA als Schwerpunkt an?",
+        [
+          [
+            "Robotik",
+            0
+          ],
+          [
+            "Musik",
+            1
+          ],
+          [
+            "Journalismus",
+            -1
+          ]
+        ],
+        1
+      ]
+    ]
   },
   {
-    name: 'Matura', title: 'Die letzte Freigabe',
-    clue: 'Bei der bilingualen Matura im sprachlichen Profil werden mehrere Grundlagenfächer auf Englisch unterrichtet. Zum bilingualen Weg gehört ein Sprachaufenthalt im dritten Gymnasialjahr.',
-    questions: [
-      ['Welche Unterrichtssprache gehört zur bilingualen Matura der KSA?', [['Italienisch', 2], ['Englisch', 0], ['Französisch', -2]], 1],
-      ['Wann findet der bilinguale Sprachaufenthalt statt?', [['Im zweiten Gymnasialjahr', 2], ['Im dritten Gymnasialjahr', 3], ['Im vierten Gymnasialjahr', 4]], 1]
-    ],
-    hint: 'Der Vermerk nennt sowohl die Unterrichtssprache als auch das Jahr des Sprachaufenthalts.'
+    "name": "Bilinguale Matura",
+    "title": "Englisch im Fachunterricht",
+    "clue": "Im sprachlichen Profil kannst du ausgewählte Grundlagenfächer wie Geschichte und Mathematik auf Englisch erleben. Ein Sprachaufenthalt im dritten Jahr gehört dazu. Die zusätzliche Qualifikation steht im Maturazeugnis. Für den Eintritt in die bilinguale Klasse gibt es ein Aufnahmeverfahren.",
+    "link": "https://www.ksasz.ch/de/gymnasium-ksa/gymnasium/ausbildung/bilinguale-maturitaet",
+    "questions": [
+      [
+        "In welcher Sprache werden ausgewählte Grundlagenfächer unterrichtet?",
+        [
+          [
+            "Englisch",
+            1
+          ],
+          [
+            "Italienisch",
+            0
+          ],
+          [
+            "Französisch",
+            -1
+          ]
+        ],
+        0
+      ],
+      [
+        "Zu welchem Bildungsprofil gehört das bilinguale Angebot?",
+        [
+          [
+            "Zum mathematisch-naturwissenschaftlichen Profil",
+            0
+          ],
+          [
+            "Zur FMS Pädagogik",
+            -1
+          ],
+          [
+            "Zum sprachlichen Profil",
+            1
+          ]
+        ],
+        2
+      ],
+      [
+        "Welches Fach kann auf Englisch unterrichtet werden?",
+        [
+          [
+            "Französisch",
+            0
+          ],
+          [
+            "Geschichte",
+            1
+          ],
+          [
+            "Latein",
+            -1
+          ]
+        ],
+        1
+      ],
+      [
+        "Wann findet der bilinguale Sprachaufenthalt statt?",
+        [
+          [
+            "Im dritten Gymnasialjahr",
+            0
+          ],
+          [
+            "Im zweiten Gymnasialjahr",
+            -1
+          ],
+          [
+            "Nach der Matura",
+            -2
+          ]
+        ],
+        0
+      ],
+      [
+        "Wo wird die bilinguale Qualifikation ausgewiesen?",
+        [
+          [
+            "Nur im Stundenplan",
+            -1
+          ],
+          [
+            "In einem Praktikumsbericht",
+            -2
+          ],
+          [
+            "Im Maturazeugnis",
+            0
+          ]
+        ],
+        2
+      ]
+    ]
+  },
+  {
+    "name": "K+S",
+    "title": "Platz für dein Talent",
+    "clue": "Die Kunst- und Sportklasse richtet sich an Jugendliche mit ausgewiesenem Talent in Kunst, Musik oder Sport. Der gymnasiale Weg dauert fünf Jahre und umfasst höchstens 25 Wochenlektionen. Talentbetreuende helfen, Schule, Trainings, Proben und Auftritte zu koordinieren.",
+    "link": "https://www.ksasz.ch/de/gymnasium-ksa/gymnasium/ausbildung/sport-und-musikbegabte",
+    "questions": [
+      [
+        "Wofür steht K+S an der KSA?",
+        [
+          [
+            "Kommunikation und Sprachen",
+            1
+          ],
+          [
+            "Kunst und Sport",
+            2
+          ],
+          [
+            "Kultur und Soziales",
+            0
+          ]
+        ],
+        1
+      ],
+      [
+        "Für wen ist die Klasse gedacht?",
+        [
+          [
+            "Für ausgewiesen Kunst-, Musik- oder Sportbegabte",
+            1
+          ],
+          [
+            "Für alle, die ohne Sport unterrichtet werden möchten",
+            0
+          ],
+          [
+            "Für angehende Primarlehrpersonen im FMS-Praktikum",
+            -1
+          ]
+        ],
+        0
+      ],
+      [
+        "Wie lange dauert der gymnasiale Weg in der K+S-Klasse?",
+        [
+          [
+            "Vier Jahre",
+            0
+          ],
+          [
+            "Drei Jahre",
+            -1
+          ],
+          [
+            "Fünf Jahre",
+            1
+          ]
+        ],
+        2
+      ],
+      [
+        "Wie viele Wochenlektionen sind es höchstens?",
+        [
+          [
+            "30",
+            0
+          ],
+          [
+            "25",
+            1
+          ],
+          [
+            "35",
+            -1
+          ]
+        ],
+        1
+      ],
+      [
+        "Wer hilft bei der Koordination von Schule und Talentförderung?",
+        [
+          [
+            "Schulinterne Talentbetreuende",
+            1
+          ],
+          [
+            "Ausschliesslich der Sportverein",
+            0
+          ],
+          [
+            "Ausschliesslich die Prüfungsleitung",
+            -1
+          ]
+        ],
+        0
+      ]
+    ]
+  },
+  {
+    "name": "FMS Pädagogik",
+    "title": "Praxis und Perspektive",
+    "clue": "Die Fachmittelschule verbindet Allgemeinbildung mit dem Berufsfeld Pädagogik. Nach drei Jahren folgt der Fachmittelschulausweis. Ein Praktikum gibt Einblick in die Berufswelt. In einem weiteren Semester kannst du die Fachmaturität Pädagogik erwerben und damit prüfungsfrei an Pädagogische Hochschulen gelangen.",
+    "link": "https://www.ksasz.ch/de/fachmittelschule/fachmittelschule/ausbildung/bildungsziel",
+    "questions": [
+      [
+        "Welches Berufsfeld bietet die FMS der KSA?",
+        [
+          [
+            "Gestaltung",
+            0
+          ],
+          [
+            "Gesundheit",
+            -1
+          ],
+          [
+            "Pädagogik",
+            1
+          ]
+        ],
+        2
+      ],
+      [
+        "Welchen Abschluss erhältst du nach drei Jahren FMS?",
+        [
+          [
+            "Gymnasiale Matura",
+            0
+          ],
+          [
+            "Fachmittelschulausweis",
+            1
+          ],
+          [
+            "Fachmaturität Pädagogik",
+            -1
+          ]
+        ],
+        1
+      ],
+      [
+        "Was ermöglicht einen direkten Einblick in die Berufswelt?",
+        [
+          [
+            "Ein Praktikum",
+            1
+          ],
+          [
+            "Eine Aufnahmeprüfung",
+            0
+          ],
+          [
+            "Die Profilwahl",
+            -1
+          ]
+        ],
+        0
+      ],
+      [
+        "Wie lange dauert der anschliessende Lehrgang zur Fachmaturität?",
+        [
+          [
+            "Zwei Jahre",
+            0
+          ],
+          [
+            "Drei Semester",
+            -1
+          ],
+          [
+            "Ein Semester",
+            1
+          ]
+        ],
+        2
+      ],
+      [
+        "Welchen Anschluss eröffnet die Fachmaturität Pädagogik?",
+        [
+          [
+            "Direkte Anstellung als Primarlehrperson",
+            0
+          ],
+          [
+            "Prüfungsfreien Zugang zu Pädagogischen Hochschulen",
+            1
+          ],
+          [
+            "Automatischen Zugang zur ETH",
+            -1
+          ]
+        ],
+        1
+      ]
+    ]
   }
 ];
 
@@ -187,7 +741,9 @@ const photos = [
   ['aussenansicht', 'Aussenansicht des KSA-Schulhauses'],
   ['lernraum', 'Lernraum mit Blick ins Freie'],
   ['mensa', 'Mensa mit langen Tischreihen'],
-  ['korridor', 'Schulhauskorridor mit Ziegelwänden']
+  ['korridor', 'Schulhauskorridor mit Ziegelwänden'],
+  ['lounge', 'Aufenthaltsraum mit farbigen Sitzmöbeln'],
+  ['ausgang', 'Eingangsbereich des Schulhauses']
 ];
 
 const get = id => document.getElementById(id);
@@ -234,16 +790,17 @@ function renderDossier(focus = false) {
         `).join('')}
       </fieldset>
     `).join('')}
-    <p class="decode">Addiere die beiden Zahlen samt Vorzeichen. Das Ergebnis ist die Ziffer für dieses Dossier.</p>
+    <p class="decode">Addiere die fünf Zahlen samt Vorzeichen. Das Ergebnis ist die Ziffer für dieses Dossier.</p>
     <p id="digit" role="status"></p>
-    <details><summary>Hinweis aufdecken</summary><p>${entry.hint}</p></details>`;
+    <details><summary>Hinweis aufdecken</summary><p>Vergleiche deine Antworten mit dem Archivvermerk über den Fragen.</p></details>
+    <p class="case-link"><a href="${entry.link}" target="_blank" rel="noopener">Mehr bei der KSA ↗</a></p>`;
   renderDigit();
   if (focus) panel.querySelector('h3').focus();
 }
 
 function renderDigit() {
   const value = digit(active);
-  get('digit').textContent = value === null ? 'Wähle je eine Antwort.' : 'Deine ermittelte Ziffer: ' + value;
+  get('digit').textContent = value === null ? 'Wähle bei jeder der fünf Fragen eine Antwort.' : 'Deine ermittelte Ziffer: ' + value;
 }
 
 function startGame() {
@@ -285,7 +842,7 @@ get('lock-form').addEventListener('submit', event => {
   event.preventDefault();
   const digits = cases.map((_, index) => digit(index));
   if (digits.includes(null)) {
-    get('code-feedback').textContent = 'Bearbeite zuerst alle vier Dossiers.';
+    get('code-feedback').textContent = 'Bearbeite zuerst alle sechs Dossiers.';
     return;
   }
   if (get('code').value !== expectedCode || digits.join('') !== expectedCode) {
